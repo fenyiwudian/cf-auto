@@ -111,6 +111,7 @@ const loopTasks = () => {
 };
 
 const registerTasks = (fn) => {
+  console.log('one task registered');
   tasks.push((cb) => {
     const rs = fn && fn();
     console.log('one task done');
