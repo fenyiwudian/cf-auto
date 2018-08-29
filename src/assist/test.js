@@ -4,6 +4,8 @@ const assert = window.chai.assert;
 
 const failedList = [];
 
+let data = null;
+
 let skipCount = 0;
 
 let todoCount = 0;
@@ -75,14 +77,14 @@ export const todo = () => {
   return Promise.resolve();
 };
 
-export const over = (sid, title) => {
+export const over = () => {
   window.parent.postMessage({
     name: 'end',
     skip: skipCount,
     todo: todoCount,
     fail: failedList.length,
-    sid,
-    message: showFailedList(title),
+    sid: data.sid,
+    message: showFailedList(data.title),
   }, '*');
 };
 
@@ -95,9 +97,7 @@ const startTask = () => {
     return;
   }
   started = true;
-  console.log('try starting');
   setTimeout(() => {
-    console.log('started');
     loopTasks();
   }, 100);
 };
@@ -111,17 +111,8 @@ const loopTasks = () => {
 };
 
 const registerTasks = (fn) => {
-  console.log('one task registered');
   tasks.push((cb) => {
-    const rs = fn && fn();
-    console.log('one task done');
-    if (rs && rs.then) {
-      console.log('then cb');
-      rs.then(cb);
-    } else {
-      console.log('cb');
-      cb();
-    }
+     fn().then(cb);
   });
   if(!started){
     startTask();
@@ -129,6 +120,10 @@ const registerTasks = (fn) => {
 };
 
 const result = {
+  init: (obj) => {
+    data = obj;
+    return result;
+  },
   test: (description, fn) => {
     registerTasks(() => {
       return test(description, fn);
