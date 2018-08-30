@@ -22,6 +22,7 @@ const ecstatic = require('ecstatic');
 const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const path = require('chromedriver').path;
+const urlParser = require('url');
 
 
 const cwd = process.cwd();
@@ -143,17 +144,15 @@ const serve = () => {
   };
 
   server.on('request', function (req) {
-    const match = req.url.match(/\/over(\d+)$/);
-    if (match) {
-      const failedCount = Number(match[1]);
+    const query = urlParser.parse(req.url, true).query;
+    if (query.a) {
+      const failedCount = Number(query.a);
       if (failedCount === 0) {
         logger('全部测试通过');
         tryQuit();
       } else {
-        const message = `${failedCount}个测试失败,请在测试页面查看详情`;
-        if (isWatchMode()) {
-          logger(message);
-        } else {
+        logger(query.b);
+        if (!isWatchMode()) {
           driver.quit();
           server.close();
           setTimeout(() => {
@@ -174,7 +173,7 @@ const watch = () => {
     fs.watch(autoDir, {recursive: true}, function () {
       clearTimeout(autoTask);
       autoTask = setTimeout(() => {
-        syncTasks();
+        return syncTasks();
       }, 500);
     });
     let distTask = -1;
@@ -195,7 +194,6 @@ const watch = () => {
 
 
 syncTasks()
-  .then(() => syncTasks())
   .then(() => syncFiles())
   .then(() => serve())
   .then(() => watch());
