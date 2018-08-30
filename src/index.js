@@ -8,7 +8,11 @@ let messages = '';
 
 const over = () => {
   const req = new XMLHttpRequest();
-  let url = `http://localhost:{{serverPort}}/over${failedCount}`;
+  const worker = document.createElement('div');
+  worker.innerHTML = messages.replace(/(<br>)/g, '__b_r_p_h__')
+    .replace(/<pre>/g, '<pre>__b_r_p_h__');
+  const msg = encodeURIComponent(worker.innerText.replace(/__b_r_p_h__/g, '\n'));
+  let url = `http://localhost:{{serverPort}}/over?a=${failedCount}&b=${msg}`;
   req.open('GET', url);
   req.send();
   const div = document.createElement('div');
