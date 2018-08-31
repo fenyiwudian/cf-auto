@@ -38,7 +38,7 @@ const cwd = process.cwd();
  * @prop taskList
  *
  */
-const config = JSON.parse(fs.readFileSync(cwd + '/auto.json'));
+const config = require(cwd + '/auto-config.js');
 
 const autoDir = `${cwd}/${config.auto}`;
 const tempDir = `${cwd}/${config.temp}`;

@@ -5,9 +5,9 @@
 npm install -g cf-auto
 ```
 
-2. 项目根目录下添加配置文件: auto.json
-```
-{
+2. 项目根目录下添加配置文件: auto-config.js
+``` javascript
+mocdule.exports = {
   // 测试脚本所在目录
   "auto": "auto",
   // 项目在本地运行时所在的目录
