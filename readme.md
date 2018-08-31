@@ -19,6 +19,7 @@ npm install -g cf-auto
   // 自动测试监听状态下的自动更新监听端口
   "liveReloadPort": "12346",
   // 测试目标地址，花括号中的参数将会被taskList的项目中的属性替代
+  // auto_path为必须项目
   "target": "http://localhost:4400/?{{sid}}&auto_path={{path}}",
   // 任务列表，可以配置多个
   "taskList": [
@@ -52,10 +53,9 @@ npm install -g cf-auto
     * 测试脚本中可以从assist/test中引入tester开始测试,引用路径关系以生成后的temp目录为准
         ``` javascript
         import {tester, deepEqual} from '../assist/test'
-        // 调用init先配置一下问卷id和问卷标题，
-        // 这两个属性可以从被测试网站的暴露在全局中的对象中找到
+        // init可以配置一下这才整个测试的标题
         // 多次init的话将以最后一次为准
-        tester.init({sid: 'xxxx', title:'xxxx'})
+        tester.init('title')
         // 链式调用开始测试
         // assert是chai单元库的的assert风格断言对象
         // deepEqual是自定义的一个深对比断言方法，相对于assert.deepEqual来说

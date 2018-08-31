@@ -4,11 +4,26 @@ const assert = window.chai.assert;
 
 const failedList = [];
 
-let data = null;
+let title = '';
 
 let skipCount = 0;
 
 let todoCount = 0;
+
+
+const getQueryParam = () => {
+  const search = location.search;
+  if (!search) {
+    return {};
+  }
+  const searches = search.substr(1).split("&");
+  const pair = {};
+  searches.forEach( (str) => {
+    const split = str.split("=");
+    pair[decodeURIComponent(split[0])] = decodeURIComponent(split[1]);
+  });
+  return pair;
+};
 
 
 const showFailedList = (title) => {
@@ -83,8 +98,8 @@ export const over = () => {
     skip: skipCount,
     todo: todoCount,
     fail: failedList.length,
-    sid: data.sid,
-    message: showFailedList(data.title),
+    path: getQueryParam()['auto_path'],
+    message: showFailedList(title),
   }, '*');
 };
 
@@ -120,8 +135,8 @@ const registerTasks = (fn) => {
 };
 
 const result = {
-  init: (obj) => {
-    data = obj;
+  init: (text) => {
+    title = text;
     return result;
   },
   test: (description, fn) => {
@@ -144,4 +159,4 @@ const result = {
   },
 };
 
-export {deepEqual, result as tester}
+export {deepEqual, result as tester};

@@ -30,11 +30,11 @@ let remained = taskList.length;
 const getTargetUrl = (task) => {
   return targetUrl.replace(/{{(.+?)}}/g, (match, first) => {
     return task[first];
-  })
+  });
 };
 
 const work = (task) => {
-  const {sid} = task;
+  const {path} = task;
   const iframe = document.createElement('iframe');
   if(location.href.indexOf('display=1') > -1){
     iframe.style.width = '1000px';
@@ -48,7 +48,7 @@ const work = (task) => {
   iframe.setAttribute('src', url);
   const handler = (evt) => {
     const {data} = evt;
-    if (data.sid !== sid) {
+    if (data.path !== path) {
       return;
     }
     if (data.name === 'end') {
