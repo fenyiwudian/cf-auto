@@ -86,13 +86,15 @@ const logger = (message) => {
  * @returns {Promise}
  */
 const syncTasks = () => {
+  const replacer = (match, first, second) => {
+    return first + '.js' + second;
+  };
   return new Promise(resolve => {
     recursive(autoDir, [], (error, files) => {
       files.forEach(file => {
         const text = fs.readFileSync(file).toString()
-          .replace(/(import .+?)(['"];)/g, (match, first, second) => {
-            return first + '.js' + second;
-          });
+          .replace(/(from ['"].+?)(['"];)/g, replacer)
+          .replace(/(import ['"].+?)(['"];)/g, replacer);
         fsExtra.outputFileSync(file.replace(config.auto, config.temp + '/tasks'), text);
       });
       logger('tasks loaded');
