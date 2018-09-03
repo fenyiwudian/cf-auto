@@ -27,7 +27,9 @@ mocdule.exports = {
       // 任务要使用的问卷id
       "sid": "9f7026db-f762-4709-a1ed-35c689625164",
       // 任务测试脚本坐在路径，起始于auto参数指定的文件夹
-      "path": "basic/index"
+      "path": "basic/index",
+      // 可选的参数，将会解开后拼接到target url之后
+      "query_params": {}
     }
   ]
 }

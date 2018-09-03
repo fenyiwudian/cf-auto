@@ -28,9 +28,17 @@ let remained = taskList.length;
 
 
 const getTargetUrl = (task) => {
-  return targetUrl.replace(/{{(.+?)}}/g, (match, first) => {
+  let basic =  targetUrl.replace(/{{(.+?)}}/g, (match, first) => {
     return task[first];
   });
+  const {queryParams} = task;
+  if(queryParams){
+    basic += '&' + Object.keys(queryParams).reduce((rs, key) => {
+      rs.push(`${key}=${queryParams[key]}`);
+      return rs;
+    }, []).join('&');
+  }
+  return basic;
 };
 
 const work = (task) => {
