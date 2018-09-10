@@ -85,8 +85,12 @@ const reviseError = (error) => {
 };
 
 window.addEventListener('error', (event) => {
-
-
+  /**
+   * 如果已经配置了忽略方法则先进行判断
+   */
+  if(window.cfIgnoreGlobalError && window.cfIgnoreGlobalError(event)){
+    return;
+  }
 
   failedList.push({
     description: '全局错误',
