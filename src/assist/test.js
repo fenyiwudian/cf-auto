@@ -1,4 +1,5 @@
 import {deepEqual} from "./tool.js";
+import {getQueryParam} from "./query.js";
 
 /**
  * 全局的chai断言库
@@ -38,23 +39,7 @@ let skipCount = 0;
  */
 let todoCount = 0;
 
-/**
- * 获取url中的queryParams
- * @returns {{}}
- */
-const getQueryParam = () => {
-  const search = location.search;
-  if (!search) {
-    return {};
-  }
-  const searches = search.substr(1).split("&");
-  const pair = {};
-  searches.forEach( (str) => {
-    const split = str.split("=");
-    pair[decodeURIComponent(split[0])] = decodeURIComponent(split[1]);
-  });
-  return pair;
-};
+
 
 /**
  * 显示失败测试样例的详细信息
@@ -100,6 +85,9 @@ const reviseError = (error) => {
 };
 
 window.addEventListener('error', (event) => {
+
+
+
   failedList.push({
     description: '全局错误',
     error: reviseError(event.error)
