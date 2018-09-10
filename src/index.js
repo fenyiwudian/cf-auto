@@ -1,3 +1,5 @@
+import {getQueryParam} from "./assist/query.js";
+
 let taskList = [];
 let targetUrl = '';
 // ##config-task-list##
@@ -5,6 +7,17 @@ let targetUrl = '';
 let failedCount = 0;
 
 let messages = '';
+
+
+const filter = getQueryParam().filter;
+
+if(filter){
+  taskList = taskList.filter(task => {
+    return task.path.indexOf(filter) > -1;
+  });
+}
+
+
 
 const over = () => {
   const req = new XMLHttpRequest();
