@@ -129,9 +129,14 @@ const serve = () => {
     cache: 0,
   })).listen(config.serverPort);
 
+  const filter = yArgs.argv.filter;
+
   let url = `http://localhost:${config.serverPort}/index.html`;
   if (yArgs.argv.display) {
     url += '?display=1';
+  }
+  if(yArgs.argv.filter){
+    url += `&filter=${filter}`;
   }
   const driver = drive(url);
 
