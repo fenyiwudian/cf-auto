@@ -1,16 +1,47 @@
 import {deepEqual} from "./tool.js";
 
+/**
+ * 全局的chai断言库
+ */
 const assert = window.chai.assert;
 
+/**
+ * 失败列表，测试失败的案列的错误消息会累计到这里
+ * @type {Array}
+ */
 const failedList = [];
 
+/**
+ * 一次测试的标题
+ * @type {string}
+ */
 let title = '';
 
+/**
+ * 发生错误后是否中断测试
+ * 对于各个测试案例之间前后之间存在依赖关系的场合下
+ * init的时候要把该值设为true，因为某个测试失败后,
+ * 后续的测试是无法正常进行的，如果不设置该标志为true，可能导致测试卡死
+ * @type {boolean}
+ */
+let errAbort = false;
+
+/**
+ * 被跳过测试的数量
+ * @type {number}
+ */
 let skipCount = 0;
 
+/**
+ * 等待被补全的测试
+ * @type {number}
+ */
 let todoCount = 0;
 
-
+/**
+ * 获取url中的queryParams
+ * @returns {{}}
+ */
 const getQueryParam = () => {
   const search = location.search;
   if (!search) {
@@ -25,7 +56,11 @@ const getQueryParam = () => {
   return pair;
 };
 
-
+/**
+ * 显示失败测试样例的详细信息
+ * @param title 标题
+ * @returns {string}
+ */
 const showFailedList = (title) => {
   if (failedList.length === 0) {
     return '';
@@ -50,7 +85,11 @@ const showFailedList = (title) => {
   return container.outerHTML;
 };
 
-
+/**
+ * 修订错误
+ * @param error
+ * @returns {{message: *, stack: *}}
+ */
 const reviseError = (error) => {
   return error.constructor.name === 'AssertionError'
     ? error
@@ -78,7 +117,11 @@ export const test = (description, fn) => {
       description,
       error: reviseError(error)
     });
-    return Promise.resolve();
+    if(errAbort){
+      over();
+    }else{
+      return Promise.resolve();
+    }
   }
 };
 
@@ -135,7 +178,8 @@ const registerTasks = (fn) => {
 };
 
 const result = {
-  init: (text) => {
+  init: (text, abortOne) => {
+    errAbort = abortOne;
     title = text;
     return result;
   },
