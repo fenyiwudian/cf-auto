@@ -120,6 +120,18 @@ const syncFiles = () => {
 };
 
 /**
+ * 往url中追加查询参数
+ * @param url
+ * @param key
+ * @param value
+ * @returns {string}
+ */
+const appendQuery = (url, key, value) => {
+  const joint = url.indexOf('?') > -1 ? '&' : '?';
+  return url + joint + key + '=' + value;
+};
+
+/**
  * 启动静态服务器
  */
 const serve = () => {
@@ -133,10 +145,10 @@ const serve = () => {
 
   let url = `http://localhost:${config.serverPort}/index.html`;
   if (yArgs.argv.display) {
-    url += '?display=1';
+    url = appendQuery(url, 'display', '1');
   }
   if(yArgs.argv.filter){
-    url += `&filter=${filter}`;
+    url = appendQuery(url, 'filter', filter);
   }
   const driver = drive(url);
 
