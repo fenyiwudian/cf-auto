@@ -1,5 +1,5 @@
-import {deepEqual} from "./tool.js";
-import {getQueryParam} from "./query.js";
+import { deepEqual } from "./tool.js";
+import { getQueryParam } from "./query.js";
 
 /**
  * 全局的chai断言库
@@ -40,7 +40,6 @@ let skipCount = 0;
 let todoCount = 0;
 
 
-
 /**
  * 显示失败测试样例的详细信息
  * @param title 标题
@@ -58,7 +57,8 @@ const showFailedList = (title) => {
   container.appendChild(header);
   failedList.forEach((failed, index) => {
     let text = `${index + 1}: ${failed.description}\n`;
-    let stack = failed.error.stack;
+    let stack = failed.error.stack
+      .replace(/\.init(\.test)+/, '.init.test');
     delete failed.error.stack;
     text += JSON.stringify(failed.error, null, 2);
     const pre = document.createElement('pre');
@@ -88,7 +88,7 @@ window.addEventListener('error', (event) => {
   /**
    * 如果已经配置了忽略方法则先进行判断
    */
-  if(window.cfIgnoreGlobalError && window.cfIgnoreGlobalError(event)){
+  if (window.cfIgnoreGlobalError && window.cfIgnoreGlobalError(event)) {
     return;
   }
 
@@ -109,9 +109,9 @@ export const test = (description, fn) => {
       description,
       error: reviseError(error)
     });
-    if(errAbort){
+    if (errAbort) {
       over();
-    }else{
+    } else {
       return Promise.resolve();
     }
   }
@@ -143,7 +143,7 @@ let started = false;
 const tasks = [];
 
 const startTask = () => {
-  if(started){
+  if (started) {
     return;
   }
   started = true;
@@ -162,9 +162,9 @@ const loopTasks = () => {
 
 const registerTasks = (fn) => {
   tasks.push((cb) => {
-     fn().then(cb);
+    fn().then(cb);
   });
-  if(!started){
+  if (!started) {
     startTask();
   }
 };
@@ -195,4 +195,4 @@ const result = {
   },
 };
 
-export {deepEqual, result as tester};
+export { deepEqual, result as tester };
