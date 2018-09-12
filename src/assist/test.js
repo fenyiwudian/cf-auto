@@ -57,7 +57,7 @@ const showFailedList = (title) => {
   container.appendChild(header);
   failedList.forEach((failed, index) => {
     let text = `${index + 1}: ${failed.description}\n`;
-    let stack = failed.error.stack
+    let stack = (failed.error.stack || "")
       .replace(/\.init(\.test)+/, '.init.test');
     delete failed.error.stack;
     text += JSON.stringify(failed.error, null, 2);
@@ -76,6 +76,12 @@ const showFailedList = (title) => {
  * @returns {{message: *, stack: *}}
  */
 const reviseError = (error) => {
+  if(typeof  error === 'string'){
+    return {
+      message: error,
+    };
+  }
+
   return error.constructor.name === 'AssertionError'
     ? error
     : {
@@ -85,6 +91,7 @@ const reviseError = (error) => {
 };
 
 window.addEventListener('error', (event) => {
+
   /**
    * 如果已经配置了忽略方法则先进行判断
    */
