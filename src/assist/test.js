@@ -117,16 +117,6 @@ export const test = (description, fn) => {
   }
 };
 
-export const skip = () => {
-  skipCount++;
-  return Promise.resolve();
-};
-
-export const todo = () => {
-  todoCount++;
-  return Promise.resolve();
-};
-
 export const over = () => {
   window.parent.postMessage({
     name: 'end',
@@ -181,16 +171,12 @@ const result = {
     });
     return result;
   },
-  todo: (description, fn) => {
-    registerTasks(() => {
-      return todo(description, fn);
-    });
+  todo: () => {
+    todoCount++;
     return result;
   },
-  skip: (description, fn) => {
-    registerTasks(() => {
-      return skip(description, fn);
-    });
+  skip: () => {
+    skipCount++;
     return result;
   },
 };
