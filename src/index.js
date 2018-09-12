@@ -17,6 +17,19 @@ if(filter){
   });
 }
 
+let remained = taskList.length;
+const allCount = taskList.length;
+const progressBar = document.querySelector('.progress');
+
+
+const progress = () => {
+  if(remained){
+    progressBar.textContent = `正在测试${allCount - remained}/${allCount}`;
+  }else{
+    progressBar.textContent = `测试完成`;
+  }
+};
+
 
 
 const over = () => {
@@ -37,8 +50,6 @@ const over = () => {
   document.body.appendChild(div);
 };
 
-let remained = taskList.length;
-
 
 const getTargetUrl = (task) => {
   let basic =  targetUrl.replace(/{{(.+?)}}/g, (match, first) => {
@@ -55,13 +66,14 @@ const getTargetUrl = (task) => {
 };
 
 const work = (task) => {
+  progress();
   const {path} = task;
   const iframe = document.createElement('iframe');
-  if(location.href.indexOf('display=1') > -1){
-    iframe.style.width = '1000px';
-    iframe.style.height = '1000px';
-  }else{
-    iframe.style.display = 'none';
+  iframe.style.width = '1000px';
+  iframe.style.height = '1000px';
+
+  if(location.href.indexOf('display=1') === -1){
+    iframe.style.opacity = '0';
   }
 
   const url = getTargetUrl(task);
@@ -84,6 +96,7 @@ const work = (task) => {
         work(taskList.pop());
       }
       remained -= 1;
+      progress();
       if(remained === 0){
         over();
       }
