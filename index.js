@@ -93,18 +93,22 @@ const syncTasks = () => {
   return new Promise(resolve => {
     recursive(autoDir, [], (error, files) => {
       files.forEach(file => {
-        let source = fs.readFileSync(file).toString();
-        if(config.fileType === 'ts'){
+        let source = fs.readFileSync(file).toString()
+          .replace(/(from ['"].+?)(['"];)/g, replacer)
+          .replace(/(import ['"].+?)(['"];)/g, replacer);
+        if(config.replacements){
+          Object.keys(config.replacements).forEach(key => {
+            source = source.replace(key, config.replacements[key]);
+          });
+        }
+        if (config.fileType === 'ts') {
           const ts = require('typescript');
           const result = ts.transpileModule(source, {
             compilerOptions: { module: ts.ModuleKind.ES2015 }
           });
           source = result.outputText;
         }
-        const text = source
-          .replace(/(from ['"].+?)(['"];)/g, replacer)
-          .replace(/(import ['"].+?)(['"];)/g, replacer);
-        fsExtra.outputFileSync(file.replace(config.auto, config.temp + '/tasks').replace(/\.ts$/, '.js'), text);
+        fsExtra.outputFileSync(file.replace(config.auto, config.temp + '/tasks').replace(/\.ts$/, '.js'), source);
       });
       logger('tasks loaded');
       resolve();
@@ -156,7 +160,7 @@ const serve = () => {
   if (yArgs.argv.display) {
     url = appendQuery(url, 'display', '1');
   }
-  if(yArgs.argv.filter){
+  if (yArgs.argv.filter) {
     url = appendQuery(url, 'filter', filter);
   }
   const driver = drive(url);
@@ -198,14 +202,14 @@ const serve = () => {
 const watch = () => {
   if (yArgs.argv.watch) {
     let autoTask = -1;
-    fs.watch(autoDir, {recursive: true}, function () {
+    fs.watch(autoDir, { recursive: true }, function () {
       clearTimeout(autoTask);
       autoTask = setTimeout(() => {
         return syncTasks();
       }, 500);
     });
     let distTask = -1;
-    fs.watch(distDir, {recursive: true}, function () {
+    fs.watch(distDir, { recursive: true }, function () {
       clearTimeout(distTask);
       distTask = setTimeout(() => {
         logger('dist changed');
