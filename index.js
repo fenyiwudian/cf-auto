@@ -44,8 +44,9 @@ const autoDir = `${cwd}/${config.auto}`;
 const tempDir = `${cwd}/${config.temp}`;
 const distDir = `${cwd}/${config.dist}`;
 
+
 // 先清空测试目录
-fsExtra.emptyDirSync(tempDir);
+// fsExtra.emptyDirSync(tempDir);
 
 /**
  * 使用webdriver启动谷歌浏览器
@@ -92,10 +93,18 @@ const syncTasks = () => {
   return new Promise(resolve => {
     recursive(autoDir, [], (error, files) => {
       files.forEach(file => {
-        const text = fs.readFileSync(file).toString()
+        let source = fs.readFileSync(file).toString();
+        if(config.fileType === 'ts'){
+          const ts = require('typescript');
+          const result = ts.transpileModule(source, {
+            compilerOptions: { module: ts.ModuleKind.ES2015 }
+          });
+          source = result.outputText;
+        }
+        const text = source
           .replace(/(from ['"].+?)(['"];)/g, replacer)
           .replace(/(import ['"].+?)(['"];)/g, replacer);
-        fsExtra.outputFileSync(file.replace(config.auto, config.temp + '/tasks'), text);
+        fsExtra.outputFileSync(file.replace(config.auto, config.temp + '/tasks').replace(/\.ts$/, '.js'), text);
       });
       logger('tasks loaded');
       resolve();
