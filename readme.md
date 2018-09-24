@@ -9,31 +9,35 @@ npm install -g cf-auto
 ``` javascript
 mocdule.exports = { 
   // 测试文件类型,默认为js 
-  "fileType": "ts",  
+  fileType: "ts",  
   // 测试脚本所在目录
-  "auto": "auto",
+  auto: "auto",
   // 项目在本地运行时所在的目录
-  "dist": "dist",
+  dist: "dist",
   // 自动测试运行时的临时目录
-  "temp": "auto_temp",
+  temp: "auto_temp",
   // 自动测试服务运行的端口
-  "serverPort": "12345",
+  serverPort: "12345",
   // 自动测试监听状态下的自动更新监听端口
-  "liveReloadPort": "12346",
+  liveReloadPort: "12346",
   // 测试目标地址，花括号中的参数将会被taskList的项目中的属性替代
   // auto_path为必须项目
-  "target": "http://localhost:4400/?{{sid}}&auto_path={{path}}",
+  target: "http://localhost:4400/?{{sid}}&auto_path={{path}}",
   // 任务列表，可以配置多个
-  "taskList": [
+  taskList: [
     {
       // 任务要使用的问卷id
-      "sid": "9f7026db-f762-4709-a1ed-35c689625164",
+      sid: "9f7026db-f762-4709-a1ed-35c689625164",
       // 任务测试脚本坐在路径，起始于auto参数指定的文件夹
-      "path": "basic/index",
+      path: "basic/index",
       // 可选的参数，将会解开后拼接到target url之后
-      "query_params": {}
+      query_params: {}
     }
-  ]
+  ],
+   // 自定义替换,配置到这里的键值对,在编译测试任务时,测试脚本中的对应键的内容都会被替换为值的内容
+  replacements: {
+    "import * as cf from '../app/services/debug.js';": "var cf = window.CF;"
+  }  
 }
 ```
 测试启动时将读取配置文件，对每个任务进行单独的测试，并报告测试结果。
