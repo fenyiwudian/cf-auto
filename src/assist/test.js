@@ -187,5 +187,11 @@ const result = {
     return result;
   },
 };
+// 告知主窗口,开始测试了
+window.parent.postMessage({
+  name: 'start',
+  path: getQueryParam()['auto_path'],
+}, '*');
+
 
 export { deepEqual, result as tester };
