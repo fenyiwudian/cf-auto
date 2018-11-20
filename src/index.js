@@ -1,4 +1,4 @@
-import {getQueryParam} from "./assist/query.js";
+import { getQueryParam } from "./assist/query.js";
 
 let taskList = [];
 let targetUrl = '';
@@ -11,7 +11,7 @@ let messages = '';
 
 const filter = getQueryParam().filter;
 
-if(filter){
+if (filter) {
   taskList = taskList.filter(task => {
     return task.path.indexOf(filter) > -1;
   });
@@ -23,9 +23,9 @@ const progressBar = document.querySelector('.progress');
 
 
 const progress = () => {
-  if(remained){
+  if (remained) {
     progressBar.textContent = `正在测试${allCount - remained}/${allCount}`;
-  }else{
+  } else {
     progressBar.textContent = `测试完成`;
   }
 };
@@ -52,11 +52,11 @@ const over = () => {
 
 
 const getTargetUrl = (task) => {
-  let basic =  targetUrl.replace(/{{(.+?)}}/g, (match, first) => {
+  let basic = targetUrl.replace(/{{(.+?)}}/g, (match, first) => {
     return task[first];
   });
-  const {queryParams} = task;
-  if(queryParams){
+  const { queryParams } = task;
+  if (queryParams) {
     basic += '&' + Object.keys(queryParams).reduce((rs, key) => {
       rs.push(`${key}=${queryParams[key]}`);
       return rs;
@@ -65,45 +65,53 @@ const getTargetUrl = (task) => {
   return basic;
 };
 
+
 const work = (task) => {
   progress();
-  const {path} = task;
+  const { path } = task;
   const iframe = document.createElement('iframe');
   iframe.style.width = '1000px';
   iframe.style.height = '1000px';
 
-  if(location.href.indexOf('display=1') === -1){
+  if (location.href.indexOf('display=1') === -1) {
     iframe.style.opacity = '0';
   }
-
   const url = getTargetUrl(task);
-
   iframe.setAttribute('src', url);
+
+  const handleItemEnd = (data) => {
+    document.body.removeChild(iframe);
+    window.removeEventListener('message', handler);
+    if (data.fail) {
+      failedCount += data.fail;
+      messages += data.message;
+    }
+    if (taskList.length) {
+      work(taskList.pop());
+    }
+    remained -= 1;
+    progress();
+    if (remained === 0) {
+      over();
+    }
+  };
+
   const handler = (evt) => {
-    const {data} = evt;
+    const { data } = evt;
     if (data.path !== path) {
       return;
     }
     if (data.name === 'end') {
-
-      document.body.removeChild(iframe);
-      window.removeEventListener('message', handler);
-      if (data.fail) {
-        failedCount += data.fail;
-        messages += data.message;
-      }
-      if (taskList.length) {
-        work(taskList.pop());
-      }
-      remained -= 1;
-      progress();
-      if(remained === 0){
-        over();
-      }
+      handleItemEnd(data);
+    } else if (data.name === 'start') {
+      clearTimeout(timeoutId);
     }
   };
   window.addEventListener('message', handler);
   document.body.appendChild(iframe);
+  const timeoutId = setTimeout(function () {
+    handleItemEnd({ fail: true, message: `<div style='color:red'>${task.path}:加载测试任务之前主程序出现问题</div>` });
+  }, 60 * 1000);
 };
 
 let count = taskList.length > 10 ? 10 : taskList.length;
