@@ -7,6 +7,9 @@ export const deepEqual = (actual, expected, assert, stack = '') => {
       deepEqual(actual[index], item, assert, `${stack}[${index}]`);
     });
   } else if (typeof expected === 'object' && expected !== null) {
+    if(typeof actual !== 'object'){
+      throw `actual${stack} is not object`;
+    }
     const actualModel = Object.keys(actual).reduce((rs, key) => {
       rs[key] = 1;
       return rs;
