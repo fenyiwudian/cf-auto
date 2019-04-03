@@ -2,6 +2,8 @@ import { getQueryParam } from "./assist/query.js";
 
 let taskList = [];
 let targetUrl = '';
+let prePage = '';
+// ##config-pre-page##
 // ##config-task-list##
 // ##config-target-url##
 let failedCount = 0;
@@ -114,8 +116,36 @@ const work = (task) => {
   }, 60 * 1000);
 };
 
-let count = taskList.length > 10 ? 10 : taskList.length;
-while (count) {
-  count--;
-  work(taskList.pop());
-}
+
+const doPrePage = () => {
+  if (prePage) {
+    return new Promise((resolve) => {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.onload = function () {
+        setTimeout(resolve, 2000);
+      };
+      iframe.src = prePage;
+      document.body.appendChild(iframe);
+    });
+  } else {
+    return Promise.resolve();
+  }
+};
+
+
+
+const start = () => {
+  doPrePage().then(() => {
+    let count = taskList.length > 10 ? 10 : taskList.length;
+    while (count) {
+      count--;
+      work(taskList.pop());
+    }
+  });
+};
+
+
+start();
+
+
