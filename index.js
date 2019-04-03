@@ -96,7 +96,7 @@ const syncTasks = () => {
         let source = fs.readFileSync(file).toString()
           .replace(/(from ['"].+?)(['"];)/g, replacer)
           .replace(/(import ['"].+?)(['"];)/g, replacer);
-        if(config.replacements){
+        if (config.replacements) {
           Object.keys(config.replacements).forEach(key => {
             source = source.replace(key, config.replacements[key]);
           });
@@ -129,6 +129,7 @@ const syncFiles = () => {
   fs.writeFileSync(tempDir + '/index.js',
     indexJs.replace('{{serverPort}}', config.serverPort)
       .replace('// ##config-task-list##', `taskList = ${JSON.stringify(config.taskList, null, 2)}`)
+      .replace('// ##config-pre-page##', `prePage = '${config.prePage || ""}'`)
       .replace('// ##config-target-url##', `targetUrl = '${config.target}'`));
 };
 
