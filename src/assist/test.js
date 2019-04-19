@@ -50,6 +50,7 @@ const showFailedList = (title) => {
     return '';
   }
   const container = document.createElement('div');
+  container.classList.add('error-item');
   container.style.background = '#ffffff';
   container.style.color = '#ff0000';
   const header = document.createElement('h1');
