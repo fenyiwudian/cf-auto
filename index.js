@@ -225,8 +225,29 @@ const watch = () => {
   }
 };
 
+const beforeStart = () => {
+  return new Promise(resolve => {
+    if (config.beforeStart) {
+      resolve(config.beforeStart());
+    } else {
+      resolve();
+    }
+  });
+};
 
-syncTasks()
+const beforeServe = () => {
+  return new Promise(resolve => {
+    if (config.beforeServe) {
+      resolve(config.beforeServe());
+    } else {
+      resolve();
+    }
+  });
+};
+
+beforeStart()
+  .then(() => syncTasks())
   .then(() => syncFiles())
+  .then(() => beforeServe())
   .then(() => serve())
   .then(() => watch());
