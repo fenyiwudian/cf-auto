@@ -91,21 +91,30 @@ const reviseError = (error) => {
     };
 };
 
-window.addEventListener('error', (event) => {
+const shouldIgnore = (event) => {
+  return window.cfIgnoreGlobalError && window.cfIgnoreGlobalError(event.reason || event);
+};
 
+const handleGlobalError = (event) => {
   /**
    * 如果已经配置了忽略方法则先进行判断
    */
-  if (window.cfIgnoreGlobalError && window.cfIgnoreGlobalError(event)) {
+  if (shouldIgnore(event)) {
     return;
   }
 
   failedList.push({
     description: '全局错误',
-    error: reviseError(event.error)
+    error: reviseError(event.reason || event.error)
   });
   over();
-});
+};
+
+
+
+
+window.addEventListener('error', handleGlobalError);
+window.addEventListener('unhandledrejection', handleGlobalError);
 
 
 export const test = (description, fn) => {
