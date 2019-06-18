@@ -22,6 +22,7 @@ if (filter) {
 let remained = taskList.length;
 const allCount = taskList.length;
 const progressBar = document.querySelector('.progress');
+const container = document.querySelector('#container');
 
 
 const progress = () => {
@@ -49,7 +50,7 @@ const over = () => {
   } else {
     div.innerHTML = messages;
   }
-  document.body.appendChild(div);
+  container.appendChild(div);
 };
 
 
@@ -82,7 +83,7 @@ const work = (task) => {
   iframe.setAttribute('src', url);
 
   const handleItemEnd = (data) => {
-    document.body.removeChild(iframe);
+    container.removeChild(iframe);
     window.removeEventListener('message', handler);
     if (data.fail) {
       failedCount += data.fail;
@@ -110,7 +111,7 @@ const work = (task) => {
     }
   };
   window.addEventListener('message', handler);
-  document.body.appendChild(iframe);
+  container.appendChild(iframe);
   const timeoutId = setTimeout(function () {
     handleItemEnd({ fail: true, message: `<div style='color:red'>${task.path}:加载测试任务之前主程序出现问题</div>` });
   }, 60 * 1000);
@@ -126,7 +127,7 @@ const doPrePage = () => {
         setTimeout(resolve, 2000);
       };
       iframe.src = prePage;
-      document.body.appendChild(iframe);
+      container.appendChild(iframe);
     });
   } else {
     return Promise.resolve();

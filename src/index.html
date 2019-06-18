@@ -9,6 +9,12 @@
       counter-reset: error-count;
     }
 
+    .progress {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+    }
+
     .error-item {
       counter-increment: error-count;
       padding-left: 20px;
@@ -21,14 +27,25 @@
       left: 0;
       top: 0;
     }
+
+    iframe {
+      pointer-events: none;
+    }
+
+    #container {
+      margin-top: 80px;
+    }
   </style>
 </head>
 
 <body>
   <h1 class="progress"></h1>
+
+  <div class="" id="container">
+
+  </div>
   <script type="module" src="index.js"></script>
   <script src="http://localhost:{{liveReloadPort}}/livereload.js?snipver=1"></script>
-
 </body>
 
 </html>
