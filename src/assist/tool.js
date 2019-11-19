@@ -16,25 +16,23 @@ export const deepEqual = (actual, expected, assert, stack = '', message = '') =>
     });
   } else if (typeof expected === 'object' && expected !== null) {
 
-    const actualModel = Object.keys(actual).reduce((rs, key) => {
-      rs[key] = 1;
-      return rs;
-    }, {});
-    const leftExpectedKeyList = [];
+    const actualKeys = Object.keys(actual);
+    let leftExpectedKeys = Object.keys(expected);
+    const leftActualKeys = [];
+    actualKeys.forEach(key => {
+      if (leftExpectedKeys.includes(key)) {
+        leftExpectedKeys = leftExpectedKeys.filter(k => k !== key);
+      } else {
+        leftActualKeys.push(key);
+      }
+    });
+    assert.equal(leftActualKeys.join(), '', `${message} actual 的 ${stack} 中属性过多`);
+    assert.equal(leftExpectedKeys.join(), '', `${message} expected 的 ${stack} 中属性过多`);
+
+
     Object.keys(expected).forEach(key => {
       deepEqual(actual[key], expected[key], assert, `${stack}.${key}`, message);
-      if (actualModel[key]) {
-        delete actualModel[key];
-      } else {
-        leftExpectedKeyList.push(key);
-      }
-
     });
-    const leftActualKeys = Object.keys(actualModel).join();
-    const leftExpectedKeys = leftExpectedKeyList.join();
-    assert.equal(leftActualKeys, '', `${message} actual 的 ${stack} 中属性过多`);
-    assert.equal(leftExpectedKeys, '', `${message} expected 的 ${stack} 中属性过多`);
-
   } else {
     assert.equal(actual, expected, `${message}  ${stack}`);
   }
