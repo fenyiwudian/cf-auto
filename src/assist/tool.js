@@ -15,7 +15,6 @@ export const deepEqual = (actual, expected, assert, stack = '', message = '') =>
       deepEqual(actual[index], item, assert, `${stack}[${index}]`, message);
     });
   } else if (typeof expected === 'object' && expected !== null) {
-
     const actualKeys = Object.keys(actual);
     let leftExpectedKeys = Object.keys(expected);
     const leftActualKeys = [];

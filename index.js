@@ -104,7 +104,8 @@ const syncTasks = () => {
         if (config.fileType === 'ts') {
           const ts = require('typescript');
           const result = ts.transpileModule(source, {
-            compilerOptions: { module: ts.ModuleKind.ES2015 }
+            compilerOptions: { module: ts.ModuleKind.ES2015, 
+              target: ts.ScriptTarget.ES2017 }
           });
           source = result.outputText;
         }
