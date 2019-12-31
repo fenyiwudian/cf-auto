@@ -1,5 +1,5 @@
 
-export const deepEqual = (actual, expected, assert, stack = '', message = '') => {
+export const deepEqual = (actual, expected, assert, message = '', stack = '') => {
   if (!stack) {
     // 顶层的时候消除undefined的属性
     if (typeof actual === 'object') {
@@ -12,7 +12,7 @@ export const deepEqual = (actual, expected, assert, stack = '', message = '') =>
   if (expected instanceof Array) {
     assert.equal(actual.length, expected.length, `${message} ${stack} 数组中成员数量不等`);
     expected.forEach((item, index) => {
-      deepEqual(actual[index], item, assert, `${stack}[${index}]`, message);
+      deepEqual(actual[index], item, assert, message, `${stack}[${index}]`);
     });
   } else if (typeof expected === 'object' && expected !== null) {
     const actualKeys = Object.keys(actual);
@@ -30,7 +30,7 @@ export const deepEqual = (actual, expected, assert, stack = '', message = '') =>
 
 
     Object.keys(expected).forEach(key => {
-      deepEqual(actual[key], expected[key], assert, `${stack}.${key}`, message);
+      deepEqual(actual[key], expected[key], message, assert, `${stack}.${key}`);
     });
   } else {
     assert.equal(actual, expected, `${message}  ${stack}`);
