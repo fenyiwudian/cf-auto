@@ -30,7 +30,7 @@ export const deepEqual = (actual, expected, assert, message = '', stack = '') =>
 
 
     Object.keys(expected).forEach(key => {
-      deepEqual(actual[key], expected[key], message, assert, `${stack}.${key}`);
+      deepEqual(actual[key], expected[key], assert, message, `${stack}.${key}`);
     });
   } else {
     assert.equal(actual, expected, `${message}  ${stack}`);
