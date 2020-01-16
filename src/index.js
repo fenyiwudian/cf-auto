@@ -34,6 +34,17 @@ const progress = () => {
 };
 
 
+const scanLink = () => {
+  document.querySelectorAll('.editor_link').forEach(item => {
+    item.setAttribute('href','http://localhost:10003/?quesID=' + item.innerText);
+    item.setAttribute('target', '_blank');
+  });
+  document.querySelectorAll('.test_link').forEach(item => {
+    item.setAttribute('href',location.origin + location.pathname + '?filter=' + item.innerText);
+    item.setAttribute('target', '_blank');
+  });
+};
+
 
 const over = () => {
   const req = new XMLHttpRequest();
@@ -51,6 +62,7 @@ const over = () => {
     div.innerHTML = messages;
   }
   container.appendChild(div);
+  scanLink();
 };
 
 
@@ -148,5 +160,3 @@ const start = () => {
 
 
 start();
-
-

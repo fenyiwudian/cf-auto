@@ -54,7 +54,7 @@ const showFailedList = (title) => {
   container.style.background = '#ffffff';
   container.style.color = '#ff0000';
   const header = document.createElement('h1');
-  header.innerText = title;
+  header.innerHTML = title;
   container.appendChild(header);
   failedList.forEach((failed, index) => {
     let text = `${index + 1}: ${failed.description}\n`;
@@ -77,7 +77,7 @@ const showFailedList = (title) => {
  * @returns {{message: *, stack: *}}
  */
 const reviseError = (error) => {
-  if(typeof  error === 'string'){
+  if (typeof error === 'string') {
     return {
       message: error,
     };
@@ -179,7 +179,10 @@ const registerTasks = (fn) => {
 const result = {
   init: (text, abortOne) => {
     errAbort = abortOne;
-    title = text;
+
+    title = text.replace(/((?:(?:\w|-)+\/)+(?:\w|-)+)/, '<a class="test_link" href="#">$1</a>')
+      .replace(/(\w{8}-(?:\w{4}-){3}\w{12})/, '<a class="editor_link" href="#">$1</a>');
+
     return result;
   },
   test: (description, fn) => {
