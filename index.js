@@ -42,7 +42,7 @@ const config = require(cwd + '/auto-config.js');
 
 const autoDir = `${cwd}/${config.auto}`;
 const tempDir = `${cwd}/${config.temp}`;
-const distDir = `${cwd}/${config.dist}`;
+const distDir = config.dist ? `${cwd}/${config.dist}` : '';
 
 
 // 先清空测试目录
@@ -104,8 +104,10 @@ const syncTasks = () => {
         if (config.fileType === 'ts') {
           const ts = require('typescript');
           const result = ts.transpileModule(source, {
-            compilerOptions: { module: ts.ModuleKind.ES2015, 
-              target: ts.ScriptTarget.ES2017 }
+            compilerOptions: {
+              module: ts.ModuleKind.ES2015,
+              target: ts.ScriptTarget.ES2017
+            }
           });
           source = result.outputText;
         }
@@ -211,13 +213,16 @@ const watch = () => {
       }, 500);
     });
     let distTask = -1;
-    fs.watch(distDir, { recursive: true }, function () {
-      clearTimeout(distTask);
-      distTask = setTimeout(() => {
-        logger('dist changed');
-        fs.writeFileSync(tempDir + '/update.js', Date.now());
-      }, 500);
-    });
+    if (distDir) {
+      fs.watch(distDir, { recursive: true }, function () {
+        clearTimeout(distTask);
+        distTask = setTimeout(() => {
+          logger('dist changed');
+          fs.writeFileSync(tempDir + '/update.js', Date.now());
+        }, 500);
+      });
+    }
+
     const liveServer = livereload.createServer({
       port: config.liveReloadPort,
       delay: 500
