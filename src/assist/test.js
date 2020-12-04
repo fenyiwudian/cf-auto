@@ -117,10 +117,9 @@ window.addEventListener('error', handleGlobalError);
 window.addEventListener('unhandledrejection', handleGlobalError);
 
 
-export const test = (description, fn) => {
+export const test = async (description, fn) => {
   try {
-    const rs = fn(assert);
-    return (rs && rs.then) ? rs : Promise.resolve();
+    return await fn(assert);
   } catch (error) {
     failedList.push({
       description,
