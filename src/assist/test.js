@@ -39,6 +39,22 @@ let skipCount = 0;
  */
 let todoCount = 0;
 
+/**
+ * 
+ * @param {string} a 
+ * @param {string} b 
+ */
+function compareText(a, b) {
+  let result = '';
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) {
+      break;
+    }
+    result += a[i];
+  }
+  return result + '^';
+}
+
 
 /**
  * 显示失败测试样例的详细信息
@@ -58,9 +74,13 @@ const showFailedList = (title) => {
   container.appendChild(header);
   failedList.forEach((failed, index) => {
     let text = `${index + 1}: ${failed.description}\n`;
-    let stack = (failed.error.stack || "")
+    const { error } = failed;
+    let stack = (error.stack || "")
       .replace(/\.init(\.test)+/, '.init.test');
-    delete failed.error.stack;
+    delete error.stack;
+    error.actual__ = error.actual;
+    delete error.actual;
+    error.compared = compareText(error.actual__, error.expected);
     text += JSON.stringify(failed.error, null, 2);
     const pre = document.createElement('pre');
     pre.innerText = text + `\n stack: ${stack}`;
