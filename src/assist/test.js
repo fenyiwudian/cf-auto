@@ -45,6 +45,8 @@ let todoCount = 0;
  * @param {string} b 
  */
 function compareText(a, b) {
+  a = String(a);
+  b = String(b);
   let result = '';
   for (let i = 0; i < a.length; i++) {
     if (a[i] !== b[i]) {
@@ -196,12 +198,12 @@ const registerTasks = (fn) => {
 };
 
 const result = {
-  init: (text, abortOne) => {
+  init: (id, path, abortOne) => {
+    const text = id + ' ' + path;
     errAbort = abortOne;
-
     title = text.replace(/((?:(?:\w|-)+\/)+(?:\w|-)+)/, '<a class="test_link" href="#">$1</a>')
       .replace(/(\w{8}-(?:\w{4}-){3}\w{12})/, '<a class="editor_link" href="#">$1</a>');
-
+    console.log(id, path);
     return result;
   },
   test: (description, fn) => {
