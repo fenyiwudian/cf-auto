@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "chai": "^4.1.2",
-    "chromedriver": "^90.0.0",
+    "chromedriver": "^91.0.0",
     "ecstatic": "^4.1.4",
     "fs-extra": "^8.1.0",
     "livereload": "^0.9.1",
