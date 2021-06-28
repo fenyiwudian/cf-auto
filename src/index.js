@@ -15,7 +15,7 @@ const filter = getQueryParam().filter;
 
 if (filter) {
   taskList = taskList.filter(task => {
-    return task.path.indexOf(filter) > -1;
+    return task.path === filter;
   });
 }
 
@@ -36,11 +36,11 @@ const progress = () => {
 
 const scanLink = () => {
   document.querySelectorAll('.editor_link').forEach(item => {
-    item.setAttribute('href','http://localhost:10003/?quesID=' + item.innerText);
+    item.setAttribute('href', 'http://localhost:10003/?quesID=' + item.innerText);
     item.setAttribute('target', '_blank');
   });
   document.querySelectorAll('.test_link').forEach(item => {
-    item.setAttribute('href',location.origin + location.pathname + '?filter=' + item.innerText);
+    item.setAttribute('href', location.origin + location.pathname + '?filter=' + item.innerText);
     item.setAttribute('target', '_blank');
   });
 };
