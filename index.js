@@ -28,15 +28,19 @@ const urlParser = require('url');
 const cwd = process.cwd();
 
 /**
- * @name CFAutoConfig
- * @prop auto
- * @prop dist
- * @prop temp
- * @prop serverPort
- * @prop liveReloadPort
- * @prop target
- * @prop taskList
+ * @typedef CFAutoConfig
+ * @property {string} auto 测试目录
+ * @property {string} dist 站点发布目录
+ * @property {string} temp 测试站点临时目录
+ * @property {string} serverPort 测试入口启动端口
+ * @property {string} liveReloadPort 变化监听端口
+ * @property {string} target ？？
+ * @property {string} taskList 任务列表
  *
+ */
+
+/**
+ * @type CFAutoConfig
  */
 const config = require(cwd + '/auto-config.js');
 
@@ -51,7 +55,7 @@ const distDir = config.dist ? `${cwd}/${config.dist}` : '';
 /**
  * 使用webdriver启动谷歌浏览器
  * @param {string} url 要打开的url
- * @returns {!ThenableWebDriver}
+ * @returns
  */
 const drive = (url) => {
   const service = new chrome.ServiceBuilder(path).build();

@@ -11,7 +11,10 @@ let failedCount = 0;
 let messages = '';
 
 
-const filter = getQueryParam().filter;
+const params = getQueryParam();
+
+const filter = params.filter;
+const fake_port = params.fake_port;
 
 if (filter) {
   taskList = taskList.filter(task => {
@@ -36,11 +39,19 @@ const progress = () => {
 
 const scanLink = () => {
   document.querySelectorAll('.editor_link').forEach(item => {
-    item.setAttribute('href', 'http://localhost:10003/?quesID=' + item.innerText);
+    let url = 'http://localhost:10003/?quesID=' + item.innerText;
+    if (fake_port) {
+      url += '&fake_port=' + fake_port;
+    }
+    item.setAttribute('href', url);
     item.setAttribute('target', '_blank');
   });
   document.querySelectorAll('.test_link').forEach(item => {
-    item.setAttribute('href', location.origin + location.pathname + '?filter=' + item.innerText);
+    let url = location.origin + location.pathname + '?filter=' + item.innerText;
+    if (fake_port) {
+      url += '&fake_port=' + fake_port;
+    }
+    item.setAttribute('href', url);
     item.setAttribute('target', '_blank');
   });
 };
@@ -72,10 +83,14 @@ const getTargetUrl = (task) => {
   });
   const { queryParams } = task;
   if (queryParams) {
+
     basic += '&' + Object.keys(queryParams).reduce((rs, key) => {
       rs.push(`${key}=${queryParams[key]}`);
       return rs;
     }, []).join('&');
+  }
+  if (fake_port) {
+    basic += '&fake_port=' + fake_port;
   }
   return basic;
 };
