@@ -222,7 +222,7 @@ const watch = () => {
         clearTimeout(distTask);
         distTask = setTimeout(() => {
           logger('dist changed');
-          fs.writeFileSync(tempDir + '/update.js', Date.now());
+          fs.writeFileSync(tempDir + '/update.js', Date.now().toString());
         }, 500);
       });
     }
