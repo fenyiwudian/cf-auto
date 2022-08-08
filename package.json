@@ -1,6 +1,6 @@
 {
   "name": "cf-auto",
-  "version": "1.103.0",
+  "version": "2.0.0",
   "description": "test runner",
   "repository": {
     "type": "git",
@@ -17,7 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "chai": "^4.1.2",
-    "chromedriver": "103.0.0",
     "ecstatic": "^4.1.4",
     "fs-extra": "^8.1.0",
     "livereload": "^0.9.1",
